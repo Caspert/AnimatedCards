@@ -39,6 +39,14 @@ class ViewController: UIViewController {
         initDeckOfCards()
         self.deck.addSubview(cardViews[0])
         
+        cardViews[0].view.backgroundColor = UIColor.yellow
+//        cardViews[0].view.center.x = self.deck.center.x / 2
+//        cardViews[0].view.center.y = self.deck.center.y / 2
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecognizer:)))
+        cardViews[0].view.addGestureRecognizer(gestureRecognizer)
+        
+        
         // Lay out the first four cards to the user
 //        layoutCards()
         
@@ -52,6 +60,12 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func handleTap(gestureRecognizer: UIGestureRecognizer) {
+        let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     // Create deck of cards and fill in the blanks
     func initDeckOfCards() {
 //        print("Before: \(cardViews.count)")
@@ -62,7 +76,9 @@ class ViewController: UIViewController {
 //            print("Item \(index): \(card.category)")
             
             // Create CardView()
-            let cardView = CardView()
+//            let cardView = CardView()
+            let cardView = CardView(frame: self.view.bounds)
+            
             
             // Fill with data
             cardView.category.text = playCards[index].category

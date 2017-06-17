@@ -26,6 +26,9 @@ class ViewController: UIViewController {
         Card(category: "Music", title: "Favorite track", icon: "Icon", question: "What is your favorite track off all time?")
     ]
     
+    // Set number of cards (1 front + rest) - important that the size is not greater then cardAttributes
+    var totalNumberOfCards = 4
+
     var divisor: CGFloat!
     var score = 0
     
@@ -39,22 +42,12 @@ class ViewController: UIViewController {
         
         // Create deck of cards (20)
         initDeckOfCards()
-//        self.deck.addSubview(cardViews[0])
-        
-//        cardViews[0].view.backgroundColor = UIColor.yellow
-//        cardViews[0].view.center.x = self.deck.center.x / 2
-//        cardViews[0].view.center.y = self.deck.center.y / 2
-        
-//        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.handleTap(gestureRecognizer:)))
-//        cardViews[0].view.addGestureRecognizer(gestureRecognizer)
-        
         
         // Lay out the first four cards to the user
         layoutCards()
         
         // Calculate 35 degrees
         divisor = (view.frame.width / 2) / 0.61
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,8 +57,6 @@ class ViewController: UIViewController {
     
     // Create deck of cards and fill in the blanks
     func initDeckOfCards() {
-//        print("Before: \(cardViews.count)")
-        
         // Create for each entity an UIView Card and add data to it
         for (index, card) in playCards.enumerated() {
 //            print("Create UIView and filling in the blanks")
@@ -88,8 +79,6 @@ class ViewController: UIViewController {
             cardViews.append(cardView)
             
         }
-//        print("After: \(cardViews.count)")
-
     }
     
     // Layout the cards
@@ -102,7 +91,6 @@ class ViewController: UIViewController {
         self.view.addSubview(firstCard)
         
         // Set attributes
-//        print(firstCard.center)
         firstCard.layer.zPosition = CGFloat(cardViews.count)
         firstCard.center = self.view.center
 
@@ -118,8 +106,8 @@ class ViewController: UIViewController {
 
         
         // Position next cards
-        for i in 1...3 {
-            
+        for i in 1...(totalNumberOfCards - 1) {
+            print("hello", i)
             if i > (cardViews.count - 1) {
                 continue
             }
@@ -141,7 +129,7 @@ class ViewController: UIViewController {
             card.frame.origin.y = cardViews[0].frame.origin.y - (CGFloat(i) * cardInteritemSpacing)
             
             // Workaround: scale causes heights to skew so compensate for it with some tweaking
-            if i == 3 {
+            if i == (totalNumberOfCards - 1) {
                 card.frame.origin.y += 1.5
             }
             
@@ -169,7 +157,7 @@ class ViewController: UIViewController {
         }
         
         // Loop through each card to move forward one by one
-        for i in 1...3 {
+        for i in 1...(totalNumberOfCards - 1) {
             
             if i > (cardViews.count - 1) {
                 continue
@@ -185,6 +173,7 @@ class ViewController: UIViewController {
             UIView.animate(withDuration: animationDuration, delay: (TimeInterval(i - 1) * (animationDuration / 2)), usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: [], animations: {
                 card.transform = CGAffineTransform(scaleX: newDownscale, y: newDownscale)
                 card.alpha = newAlpha
+                
                 if i == 1 {
                     card.center = self.view.center
                 } else {
@@ -204,35 +193,35 @@ class ViewController: UIViewController {
         }
         
         // Add a new card (now the 4th card in the deck) to the very back
-        if 4 > (cardViews.count - 1) {
+        if totalNumberOfCards > (cardViews.count - 1) {
             if cardViews.count != 1 {
                 self.view.bringSubview(toFront: cardViews[1])
             }
             return
         }
         
-        let newCard = cardViews[4]
+        let newCard = cardViews[totalNumberOfCards]
         
         // Set attributes
-        newCard.layer.zPosition = CGFloat(cardViews.count - 4)
+        newCard.layer.zPosition = CGFloat(cardViews.count - totalNumberOfCards)
         
-        let downscale = cardAttributes[3].downscale
-        let alpha = cardAttributes[3].alpha
+        let downscale = cardAttributes[(totalNumberOfCards - 1)].downscale
+        let alpha = cardAttributes[(totalNumberOfCards - 1)].alpha
         
         // Initial state of new card
         newCard.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         newCard.alpha = 0
         newCard.center.x = self.view.center.x
-        newCard.frame.origin.y = cardViews[1].frame.origin.y - (4 * cardInteritemSpacing)
+        newCard.frame.origin.y = cardViews[1].frame.origin.y - (CGFloat(totalNumberOfCards) * cardInteritemSpacing)
         self.view.addSubview(newCard)
         
         
         // Animate to end state of new card
-        UIView.animate(withDuration: animationDuration, delay: (3 * (animationDuration / 2)), usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: [], animations: {
+        UIView.animate(withDuration: animationDuration, delay: (Double(totalNumberOfCards - 1) * (animationDuration / 2)), usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: [], animations: {
             newCard.transform = CGAffineTransform(scaleX: downscale, y: downscale)
             newCard.alpha = alpha
             newCard.center.x = self.view.center.x
-            newCard.frame.origin.y = self.cardViews[1].frame.origin.y - (3 * self.cardInteritemSpacing) + 1.5
+            newCard.frame.origin.y = self.cardViews[1].frame.origin.y - (CGFloat(self.totalNumberOfCards - 1) * self.cardInteritemSpacing) + 1.5
         }, completion: nil)
         
         // First card needs to be in the front for proper interactivity
@@ -319,9 +308,6 @@ class ViewController: UIViewController {
     
     
     func handleTap(gestureRecognizer: UITapGestureRecognizer) {
-        let card = gestureRecognizer.view!
-        print(card.center)
-
         let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)

@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     ]
     
     var divisor: CGFloat!
+    var score = 0
     
     // Scale and alpha of successive cards visible to the user
     let cardAttributes: [(downscale: CGFloat, alpha: CGFloat)] = [(1, 1), (0.92, 0.8), (0.84, 0.6), (0.76, 0.4)]
@@ -154,7 +155,7 @@ class ViewController: UIViewController {
         self.view.bringSubview(toFront: firstCard)
         
         // Store current card globally
-//        self.selectedCard = firstCard
+        self.selectedCard = firstCard
         
     }
     
@@ -163,6 +164,11 @@ class ViewController: UIViewController {
         
         // Define duration of animation
         let animationDuration: TimeInterval = 0.2
+        
+        if cardViews.count <= 1 {
+            reachedEndOfStack()
+            return
+        }
         
         // Loop through each card to move forward one by one
         for i in 1...3 {
@@ -191,6 +197,9 @@ class ViewController: UIViewController {
                 if i == 1 {
                     let panGesture = UIPanGestureRecognizer(target: self, action: #selector(ViewController.handlePan(sender:)))
                     card.addGestureRecognizer(panGesture)
+                    
+                    // Update stored card as current card globally
+                    self.selectedCard = card
                 }
             })
 
@@ -230,9 +239,6 @@ class ViewController: UIViewController {
         
         // First card needs to be in the front for proper interactivity
         self.view.bringSubview(toFront: cardViews[1])
-        
-        // Update stored card as current card globally
-//        self.selectedCard = cardViews[1]
         
     }
     
@@ -288,6 +294,7 @@ class ViewController: UIViewController {
                     self.selectedCard?.alpha = 0
                 }, completion: { (_) in
                     self.removeOldFrontCard()
+                    self.score+=1
                 })
                 showNextCard()
                 return
@@ -333,6 +340,7 @@ class ViewController: UIViewController {
     // Reached end of stack
     func reachedEndOfStack() {
         print("There are no more cards")
+        print("Score is: \(score)")
     }
 
 

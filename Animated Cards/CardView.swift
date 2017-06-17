@@ -23,6 +23,13 @@ class CardView: UIView {
         // Load the nib named 'CardView' into memory, finding it in the main bundle.
         Bundle.main.loadNibNamed("CardView", owner: self, options: nil)
         
+        // Add the frame size of the NibView view to the frame itself. 
+        // The frame of the super view is on initialization zero.
+        // Or do it on creation in the ViewController class: CardView(frame: CGRect(x: 0, y: 0, width: 240, height: 320))
+//        print(self.frame, view.frame)
+        self.frame = view.frame
+        
+        
         // Adding the 'contentView' to self (self represents the instance of a CardView which is a 'UIView').
         addSubview(view)
         
@@ -40,12 +47,11 @@ class CardView: UIView {
 
     }
     
-    /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         // Drawing code
+        print("DRAW")
     }
-    */
 
 }

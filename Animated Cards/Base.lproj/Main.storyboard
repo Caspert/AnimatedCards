@@ -21,7 +21,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nd0-D7-qpV">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grid" translatesAutoresizingMaskIntoConstraints="NO" id="Dto-uX-4jK">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nd0-D7-qpV">
                                 <rect key="frame" x="77" y="198" width="220" height="300"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -46,8 +49,18 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Hur-3N-U2Y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3oo-Uz-2Ha"/>
+                            <constraint firstItem="Dto-uX-4jK" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="NSB-g9-jQS"/>
                             <constraint firstItem="Hur-3N-U2Y" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="XQg-Sg-Dr9"/>
+                            <constraint firstAttribute="trailing" secondItem="Dto-uX-4jK" secondAttribute="trailing" id="fNf-SG-u70"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Dto-uX-4jK" secondAttribute="bottom" id="fQM-DR-kwP"/>
+                            <constraint firstItem="Dto-uX-4jK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="n7c-qI-aOS"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="nd0-D7-qpV"/>
+                                <exclude reference="Hur-3N-U2Y"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="deck" destination="Hur-3N-U2Y" id="IhN-wK-Rce"/>
@@ -55,6 +68,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="38.23088455772114"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="grid" width="375" height="667"/>
+    </resources>
 </document>

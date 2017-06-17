@@ -23,7 +23,7 @@ class CardView: UIView {
         // Load the nib named 'CardView' into memory, finding it in the main bundle.
         Bundle.main.loadNibNamed("CardView", owner: self, options: nil)
         
-        // Adding the 'contentView' to self (self represents the instance of a WeatherView which is a 'UIView').
+        // Adding the 'contentView' to self (self represents the instance of a CardView which is a 'UIView').
         addSubview(view)
         
         // Style the custom view

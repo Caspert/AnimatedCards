@@ -152,9 +152,9 @@ class ViewController: UIViewController {
 //        
 //        // Make sure that the first card in the deck is at the front
 //        self.view.bringSubview(toFront: firstCard)
-//        
-//        // Store current card globally
-//        self.selectedCard = firstCard
+        
+        // Store current card globally
+        self.selectedCard = firstCard
         
     }
     
@@ -172,15 +172,42 @@ class ViewController: UIViewController {
         print(card.center)
         let point = sender.translation(in: view)
         print(point, view.center.x)
-        
+        let xFromCenter = card.center.x - view.center.x
         card.center = CGPoint(x: view.center.x + point.x, y: view.center.y + point.y)
+
         
-//        card.center = CGPoint(x: view.center.x + point.x, y: view.center.y + point.y)
-//
-        if sender.state == .ended {
-            UIView.animate(withDuration: 0.2, animations: {
-                card.center = self.view.center
-            })
+        // Dragging card to the right or left
+        // Change card feedback color
+        if xFromCenter > 0 {
+            self.selectedCard?.view.backgroundColor = UIColor.green
+            card.backgroundColor = UIColor.green
+        } else {
+            self.selectedCard?.view.backgroundColor = UIColor.red
+            card.backgroundColor = UIColor.red
+        }
+        
+        // If gesture has ended
+        if sender.state == UIGestureRecognizerState.ended {
+            
+            // Define yes or no sections on screen - 75 from left side and right side
+            if card.center.x < 75 {
+                // Move off to the left side of the screen
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.selectedCard?.center = CGPoint(x: card.center.x - 200, y: card.center.y + 75)
+                    self.selectedCard?.alpha = 0
+                })
+                return
+            } else if card.center.x > (view.frame.width - 75) {
+                // Move off to the right side of the screen
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.selectedCard?.center = CGPoint(x: card.center.x + 200, y: card.center.y + 75)
+                    self.selectedCard?.alpha = 0
+                })
+                return
+            }
+            
+            resetCard()
+            
         }
         
     }
@@ -189,6 +216,10 @@ class ViewController: UIViewController {
     // Reset card to deck
     func resetCard() {
         UIView.animate(withDuration: 0.2, animations: {
+            self.selectedCard?.center = self.view.center
+            self.selectedCard?.view.backgroundColor = UIColor.white
+            self.selectedCard?.alpha = 1
+
 //            self.card.center = self.view.center
 //            self.card.alpha = 1
 //            self.card.backgroundColor = UIColor.lightGray

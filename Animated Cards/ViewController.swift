@@ -51,7 +51,7 @@ class ViewController: UIViewController {
         // Lay out the first four cards to the user
         layoutCards()
         
-        // Calculate 45 degrees
+        // Calculate 35 degrees
         divisor = (view.frame.width / 2) / 0.61
 
     }
@@ -174,7 +174,10 @@ class ViewController: UIViewController {
         print(point, view.center.x)
         let xFromCenter = card.center.x - view.center.x
         card.center = CGPoint(x: view.center.x + point.x, y: view.center.y + point.y)
-
+        
+        // Add rotation to the cards
+        // 100/2 = 50/0.61 = 81.967
+        card.transform = CGAffineTransform(rotationAngle: xFromCenter / divisor)
         
         // Dragging card to the right or left
         // Change card feedback color
@@ -219,6 +222,7 @@ class ViewController: UIViewController {
             self.selectedCard?.center = self.view.center
             self.selectedCard?.view.backgroundColor = UIColor.white
             self.selectedCard?.alpha = 1
+            self.selectedCard?.transform = CGAffineTransform.identity
 
 //            self.card.center = self.view.center
 //            self.card.alpha = 1

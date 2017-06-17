@@ -101,7 +101,7 @@ class ViewController: UIViewController {
         self.view.addSubview(firstCard)
         
         // Set attributes
-        print(firstCard.center)
+//        print(firstCard.center)
         firstCard.layer.zPosition = CGFloat(cardViews.count)
         firstCard.center = self.view.center
 //        firstCard.view.center.x = self.deck.center.x / 2
@@ -154,10 +154,87 @@ class ViewController: UIViewController {
         self.view.bringSubview(toFront: firstCard)
         
         // Store current card globally
-        self.selectedCard = firstCard
+//        self.selectedCard = firstCard
         
     }
     
+    // Show next card - showNextCard() just adds the next card to the 4 visible cards and animates each card to move forward
+    func showNextCard() {
+        
+        // Define duration of animation
+        let animationDuration: TimeInterval = 0.2
+        
+        // Loop through each card to move forward one by one
+        for i in 1...3 {
+            
+            if i > (cardViews.count - 1) {
+                continue
+            }
+            
+            let card = cardViews[i]
+            
+            // Set attributes for next card coming
+            let newDownscale = cardAttributes[i - 1].downscale
+            let newAlpha = cardAttributes[i - 1].alpha
+            
+            // Animate cards
+            UIView.animate(withDuration: animationDuration, delay: (TimeInterval(i - 1) * (animationDuration / 2)), usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: [], animations: {
+                card.transform = CGAffineTransform(scaleX: newDownscale, y: newDownscale)
+                card.alpha = newAlpha
+                if i == 1 {
+                    card.center = self.view.center
+                } else {
+                    card.center.x = self.view.center.x
+                    card.frame.origin.y = self.cardViews[1].frame.origin.y - (CGFloat(i - 1) * self.cardInteritemSpacing)
+                }
+            }, completion: { (_) in
+                if i == 1 {
+                    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(ViewController.handlePan(sender:)))
+                    card.addGestureRecognizer(panGesture)
+                }
+            })
+
+        }
+        
+        // Add a new card (now the 4th card in the deck) to the very back
+        if 4 > (cardViews.count - 1) {
+            if cardViews.count != 1 {
+                self.view.bringSubview(toFront: cardViews[1])
+            }
+            return
+        }
+        
+        let newCard = cardViews[4]
+        
+        // Set attributes
+        newCard.layer.zPosition = CGFloat(cardViews.count - 4)
+        
+        let downscale = cardAttributes[3].downscale
+        let alpha = cardAttributes[3].alpha
+        
+        // Initial state of new card
+        newCard.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        newCard.alpha = 0
+        newCard.center.x = self.view.center.x
+        newCard.frame.origin.y = cardViews[1].frame.origin.y - (4 * cardInteritemSpacing)
+        self.view.addSubview(newCard)
+        
+        
+        // Animate to end state of new card
+        UIView.animate(withDuration: animationDuration, delay: (3 * (animationDuration / 2)), usingSpringWithDamping: 0.8, initialSpringVelocity: 0.0, options: [], animations: {
+            newCard.transform = CGAffineTransform(scaleX: downscale, y: downscale)
+            newCard.alpha = alpha
+            newCard.center.x = self.view.center.x
+            newCard.frame.origin.y = self.cardViews[1].frame.origin.y - (3 * self.cardInteritemSpacing) + 1.5
+        }, completion: nil)
+        
+        // First card needs to be in the front for proper interactivity
+        self.view.bringSubview(toFront: cardViews[1])
+        
+        // Update stored card as current card globally
+//        self.selectedCard = cardViews[1]
+        
+    }
     
     // Reset button for dev
     @IBAction func reset(_ sender: Any) {
@@ -169,9 +246,9 @@ class ViewController: UIViewController {
         
         // The view the gesture recognizer is attached to
         let card = sender.view!
-        print(card.center)
+//        print(card.center)
         let point = sender.translation(in: view)
-        print(point, view.center.x)
+//        print(point, view.center.x)
         let xFromCenter = card.center.x - view.center.x
         card.center = CGPoint(x: view.center.x + point.x, y: view.center.y + point.y)
         
@@ -189,6 +266,7 @@ class ViewController: UIViewController {
             card.backgroundColor = UIColor.red
         }
         
+        
         // If gesture has ended
         if sender.state == UIGestureRecognizerState.ended {
             
@@ -198,14 +276,20 @@ class ViewController: UIViewController {
                 UIView.animate(withDuration: 0.3, animations: {
                     self.selectedCard?.center = CGPoint(x: card.center.x - 200, y: card.center.y + 75)
                     self.selectedCard?.alpha = 0
+                }, completion: { (_) in
+                    self.removeOldFrontCard()
                 })
+                showNextCard()
                 return
             } else if card.center.x > (view.frame.width - 75) {
                 // Move off to the right side of the screen
                 UIView.animate(withDuration: 0.3, animations: {
                     self.selectedCard?.center = CGPoint(x: card.center.x + 200, y: card.center.y + 75)
                     self.selectedCard?.alpha = 0
+                }, completion: { (_) in
+                    self.removeOldFrontCard()
                 })
+                showNextCard()
                 return
             }
             
@@ -215,6 +299,10 @@ class ViewController: UIViewController {
         
     }
     
+    func removeOldFrontCard() {
+        cardViews[0].removeFromSuperview()
+        cardViews.remove(at: 0)
+    }
     
     // Reset card to deck
     func resetCard() {

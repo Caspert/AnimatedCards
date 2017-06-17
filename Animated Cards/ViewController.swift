@@ -105,8 +105,6 @@ class ViewController: UIViewController {
 //        print(firstCard.center)
         firstCard.layer.zPosition = CGFloat(cardViews.count)
         firstCard.center = self.view.center
-//        firstCard.view.center.x = self.deck.center.x / 2
-//        firstCard.view.center.y = self.deck.center.y / 2
 
         
         // Add tap gesture to trigger dragged function
@@ -252,9 +250,7 @@ class ViewController: UIViewController {
         
         // The view the gesture recognizer is attached to
         let card = sender.view!
-//        print(card.center)
         let point = sender.translation(in: view)
-//        print(point, view.center.x)
         let xFromCenter = card.center.x - view.center.x
         card.center = CGPoint(x: view.center.x + point.x, y: view.center.y + point.y)
         
@@ -318,12 +314,6 @@ class ViewController: UIViewController {
             self.selectedCard?.view.backgroundColor = UIColor.white
             self.selectedCard?.alpha = 1
             self.selectedCard?.transform = CGAffineTransform.identity
-
-//            self.card.center = self.view.center
-//            self.card.alpha = 1
-//            self.card.backgroundColor = UIColor.lightGray
-//            self.card.backgroundColor = UIColor.white
-//            self.card.transform = CGAffineTransform.identity
         })
     }
     

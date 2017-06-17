@@ -119,39 +119,39 @@ class ViewController: UIViewController {
 
         
         // Position next cards
-//        for i in 1...3 {
-//            
-//            if i > (cardViews.count - 1) {
-//                continue
-//            }
-//            
-//            let card = cardViews[i]
-//            
-//            // Set position begind previous
-//            card.layer.zPosition = CGFloat(cardViews.count - i)
-//            
-//            // Set attributes for other cards
-//            let downscale = cardAttributes[i].downscale
-//            let alpha = cardAttributes[i].alpha
-//            
-//            card.transform = CGAffineTransform(scaleX: downscale, y: downscale)
-//            card.alpha = alpha
-//            
-//            // Position each card so there's a set space (cardInteritemSpacing) between each card, to give it a fanned out look
-//            card.center.x = self.view.center.x
-//            card.frame.origin.y = cardViews[0].frame.origin.y - (CGFloat(i) * cardInteritemSpacing)
-//            
-//            // Workaround: scale causes heights to skew so compensate for it with some tweaking
-//            if i == 3 {
-//                card.frame.origin.y += 1.5
-//            }
-//            
-//            self.view.addSubview(card)
-//            
-//        }
-//        
-//        // Make sure that the first card in the deck is at the front
-//        self.view.bringSubview(toFront: firstCard)
+        for i in 1...3 {
+            
+            if i > (cardViews.count - 1) {
+                continue
+            }
+            
+            let card = cardViews[i]
+            
+            // Set position begind previous
+            card.layer.zPosition = CGFloat(cardViews.count - i)
+            
+            // Set attributes for other cards
+            let downscale = cardAttributes[i].downscale
+            let alpha = cardAttributes[i].alpha
+            
+            card.transform = CGAffineTransform(scaleX: downscale, y: downscale)
+            card.alpha = alpha
+            
+            // Position each card so there's a set space (cardInteritemSpacing) between each card, to give it a fanned out look
+            card.center.x = self.view.center.x
+            card.frame.origin.y = cardViews[0].frame.origin.y - (CGFloat(i) * cardInteritemSpacing)
+            
+            // Workaround: scale causes heights to skew so compensate for it with some tweaking
+            if i == 3 {
+                card.frame.origin.y += 1.5
+            }
+            
+            self.view.addSubview(card)
+            
+        }
+        
+        // Make sure that the first card in the deck is at the front
+        self.view.bringSubview(toFront: firstCard)
         
         // Store current card globally
         self.selectedCard = firstCard
